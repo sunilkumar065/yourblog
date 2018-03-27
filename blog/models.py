@@ -13,4 +13,4 @@ class Post(Document):
 	posted_on = DateTimeField(default=datetime.now())
 	last_edited = DateTimeField()
 	comments = ListField(EmbeddedDocumentField(Comment))
-	tags = ListField()
+	tags = ListField(StringField())
