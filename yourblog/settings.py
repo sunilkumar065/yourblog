@@ -53,6 +53,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = ( 'profiles.backend.ProfileBackend', )
+
+
 ROOT_URLCONF = 'yourblog.urls'
 
 TEMPLATES = [
