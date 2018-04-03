@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'profiles',
-    'blog'
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -53,8 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTHENTICATION_BACKENDS = ( 'profiles.backend.ProfileBackend', )
-
+AUTHENTICATION_BACKENDS = ( 'profiles.backends.ProfileBackend',)
 
 ROOT_URLCONF = 'yourblog.urls'
 
@@ -84,11 +83,7 @@ connect('blog')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'blog',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'PORT': ''
+        'ENGINE': 'django.db.backends.dummy'
     }
 }
 

@@ -1,10 +1,6 @@
-from mongoengine import Document,EmbeddedDocument, StringField,IntField,DateTimeField,\
-						ListField,EmbeddedDocumentField
+from mongoengine import Document, StringField,IntField,DateTimeField,\
+						ListField,ReferenceField,CASCADE
 from datetime import datetime
-
-class Comment(EmbeddedDocument):
-	content = StringField()
-	likes = IntField(default=0)
 
 class Post(Document):
 	title = StringField()
@@ -12,5 +8,10 @@ class Post(Document):
 	votes = IntField(default=0)
 	posted_on = DateTimeField(default=datetime.now())
 	last_edited = DateTimeField()
-	comments = ListField(EmbeddedDocumentField(Comment))
 	tags = ListField(StringField())
+
+class Comment(Document):
+	content = StringField()
+	likes = IntField(default=0)
+	post = ReferenceField(Post,reverse_delete_rule=CASCADE)
+	created_on = DateTimeField(default=datetime.now())

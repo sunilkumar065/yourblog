@@ -1,7 +1,7 @@
 from profiles.models import Profile
 
 class ProfileBackend:
-    def authenticate(self,username=None,email=None,password):
+    def authenticate(self,email,password):
         try:
             profile = Profile.objects.get(email=email)
 
@@ -12,7 +12,7 @@ class ProfileBackend:
         except Profile.DoesNotExist:
             return None
 
-    def get_user(user):
+    def get_user(self,email):
         try:
             return Profile.objects.get(email=email)
         except Profile.DoesNotExist:
