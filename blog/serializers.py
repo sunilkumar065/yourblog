@@ -1,21 +1,20 @@
 from rest_framework.serializers import ModelSerializer,PrimaryKeyRelatedField
 from blog.models import Post,Comment,Tag
 
-class TagSerializer(ModelSerializer):
-	class Meta:
-		model = Tag
-		fields = '__all__'
-
 class CommentSerializer(ModelSerializer):
 
 	class Meta:
 		model = Comment
-		fields = '__all__'
+		fields = ('content','likes','created_on')
 
 class PostSerializer(ModelSerializer):
-	comments = PrimaryKeyRelatedField(many=True,queryset=Post.objects.all())
-	tags = PrimaryKeyRelatedField(many=True,read_only=True)
+	'''
+		this will only show "id" of comments
+		comments = PrimaryKeyRelatedField(many=True,queryset=Post.objects.all())
+	'''
+	comments = CommentSerializer(many=True,required=False)
 
 	class Meta:
 		model = Post
 		fields = ('title','content','comments','tags')
+		depth = 1

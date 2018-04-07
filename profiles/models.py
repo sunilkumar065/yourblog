@@ -1,20 +1,10 @@
-from mongoengine import Document
-from mongoengine import StringField,EmailField,ListField,DateTimeField
-from datetime import datetime
+from django.db.models import Model,CASCADE,OneToOneField,CharField,TextField
+from django.contrib.auth.models import User
 
-class Profile(Document):
-    username = StringField(max_len=10)
-    email = EmailField(required=True)
-    password = StringField(required=True)
-    first_name = StringField(required=True, db_field='fn')
-    last_name = StringField(required=True, db_field='ln')
-    profession = StringField(db_field='prof')
-    description = StringField(db_field='desc')
-    topics_of_interest = ListField(StringField(), db_field='toi')
-    created_on = DateTimeField(default=datetime.now())
+class Profile(Model):
+    user = OneToOneField(User,on_delete=CASCADE)
+    bio = TextField(blank=True)
+    profession = CharField(max_length=50,blank=True)
 
     def __str__(self):
-        return self.email
-
-    def is_authenticated(self):
-        return True
+        return self.user.username

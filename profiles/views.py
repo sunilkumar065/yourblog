@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate,login,logout
 
 class LoginView(APIView):
     def post(self,request):
-        import ipdb;ipdb.set_trace()
+        # import ipdb;ipdb.set_trace()
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.data.get('email')

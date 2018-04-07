@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url,include
 from profiles.views import LoginView,RegistrationView
+from blog.views import IndexView
 
 urlpatterns = [
+    url('^$',IndexView.as_view()),
     url('admin/', admin.site.urls),
     url('blog/',include('blog.urls')),
     url('login/',LoginView.as_view(),name='sign-in'),

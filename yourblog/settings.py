@@ -25,7 +25,7 @@ SECRET_KEY = '-3w1#nhz9uztw$&$0bc+_@k^mn+x-q)y=a@jh110e%9u6m48jt'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.13','127.0.0.1','192.168.225.34']
 
 
 # Application definition
@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTHENTICATION_BACKENDS = ( 'profiles.backends.ProfileBackend','django.contrib.auth.backends.ModelBackend')
+# AUTHENTICATION_BACKENDS = ( 'profiles.backends.ProfileBackend','django.contrib.auth.backends.ModelBackend')
 
 ROOT_URLCONF = 'yourblog.urls'
 
