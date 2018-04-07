@@ -14,7 +14,7 @@ class Post(Model):
 	content = TextField()
 	votes = IntegerField(default=0)
 	created_on = DateTimeField(auto_now_add=True)
-	last_edited = DateTimeField(auto_now=True)
+	last_edited = DateTimeField(null=True)
 	tags = ManyToManyField(Tag,related_name='tags')
 
 	def __str__(self):
