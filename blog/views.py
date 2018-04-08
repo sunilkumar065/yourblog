@@ -5,13 +5,25 @@ from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime
 from django.http import Http404
-from blog.serializers import PostSerializer,PostDetailSerializer
+from blog.serializers import PostSerializer,PostDetailSerializer,CommentSerializer
 from blog.models import Post,Comment,Tag
 
 class IndexView(APIView):
 	def get(self,request):
 		res = {'running':True}
 		return Response(res)
+
+class CommentView(CreateAPIView):
+	queryset = Post.objects.all()
+	serializer_class = CommentSerializer
+
+	def create(self,request,*args,**kwargs):
+		comment = request.data.get('content',None)
+		if comment:
+			post = Post.objects.get(pk=kwargs.get('pk'))
+			Comment.objects.create(content=comment,post=post)
+			post_data = PostDetailSerializer(post)
+			return Response(post_data.data)
 
 class PostListView(ListAPIView):
 	queryset = Post.objects.all()
@@ -63,4 +75,12 @@ class PostUpdateDeleteView(RetrieveUpdateDestroyAPIView):
 				post.tags.add(Tag.objects.get(pk=tag_id))
 		post.last_edited = datetime.now()
 		post.save()
-		return Response({'success':True})
+		post_data = PostDetailSerializer(post)
+		return Response(post_data.data)
+
+	def partial_update(self,request,*args,**kwargs):
+		post = self.get_object()
+		post.votes = post.votes+1
+		post.save()
+		post_data = PostDetailSerializer(post)
+		return Response(post_data.data)
