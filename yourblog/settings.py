@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'profiles',
+    'accounts',
     'blog',
 ]
 
@@ -52,7 +52,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# AUTHENTICATION_BACKENDS = ( 'profiles.backends.ProfileBackend','django.contrib.auth.backends.ModelBackend')
+AUTHENTICATION_BACKENDS = ['accounts.backends.UserBackend','django.contrib.auth.backends.ModelBackend']
+AUTH_USER_MODEL = 'accounts.User'
 
 ROOT_URLCONF = 'yourblog.urls'
 

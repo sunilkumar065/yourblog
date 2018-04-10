@@ -2,16 +2,25 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView,CreateAPIView,GenericAPIView \
 					,RetrieveUpdateDestroyAPIView,RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from rest_framework import status
 from datetime import datetime
 from django.http import Http404
-from blog.serializers import PostSerializer,PostDetailSerializer,CommentSerializer
+from blog.serializers import PostSerializer,PostDetailSerializer,CommentSerializer,TagSerializer
 from blog.models import Post,Comment,Tag
 
-class IndexView(APIView):
-	def get(self,request):
-		res = {'running':True}
-		return Response(res)
+@api_view(['GET'])
+def index(request):
+	return Response({'running':True})
+
+class TagView(ListAPIView):
+	queryset = Tag.objects.all()
+	serializer_class = TagSerializer
+
+	def list(self,request):
+		queryset = self.get_queryset()
+		serializer = TagSerializer(queryset,many=True)
+		return Response(serializer.data)
 
 class CommentView(CreateAPIView):
 	queryset = Post.objects.all()
@@ -35,8 +44,10 @@ class PostListView(ListAPIView):
 		response = {'posts':[]}
 		for data in serializer.data:
 			to_append = {'title':'','summary':''}
-			to_append.update({'title':data['title'],
-							  'summary':data['content'][:50],'votes':data['votes']})
+			to_append.update({'id':data['id'],
+							  'title':data['title'],
+							  'summary':data['content'][:50],
+							  'votes':data['votes']})
 			response['posts'].append(to_append)
 
 		return Response(response)
@@ -57,7 +68,8 @@ class PostCreateView(CreateAPIView):
 		if tag_data:
 			for tag_id in tag_data:
 				post.tags.add(Tag.objects.get(pk=tag_id))
-		return Response(request.data)
+		serializer = PostDetailSerializer(post)
+		return Response(serializer.data)
 
 class PostUpdateDeleteView(RetrieveUpdateDestroyAPIView):
 	queryset = Post.objects.all()
