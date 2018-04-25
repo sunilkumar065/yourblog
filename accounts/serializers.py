@@ -1,5 +1,6 @@
-from rest_framework.serializers import ModelSerializer,ValidationError,CharField
+from rest_framework.serializers import ModelSerializer,ValidationError,CharField,PrimaryKeyRelatedField
 from accounts.models import User
+from blog.serializers import PostSerializer
 
 class UserSerializer(ModelSerializer):
     password = CharField()
@@ -21,3 +22,11 @@ class UserSerializer(ModelSerializer):
         validated_data.pop('password2')
         user = User.objects.create(**validated_data)
         return user
+
+# class PostUserSerializer(ModelSerializer):
+#     posts = PrimaryKeyRelatedField(many=True,read_only=True)
+#
+#     class Meta:
+#         model = User
+#         fields = ('email','posts')
+#         depth = 1

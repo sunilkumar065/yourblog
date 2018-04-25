@@ -3,8 +3,11 @@ from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 from rest_framework import status
 from accounts.models import User
+from blog.models import Post
+from blog.serializers import PostSerializer
 from accounts.serializers import UserSerializer
 
 class Dashboard(APIView):
@@ -28,7 +31,6 @@ class RegistrationView(APIView):
 
 class LoginView(APIView):
     def post(self,request):
-        import ipdb; ipdb.set_trace()
         email = request.data.get('email',None)
         password = request.data.get('password',None)
         if email and password:
@@ -44,3 +46,11 @@ class LoginView(APIView):
 def logout_view(request):
     logout(request)
     return HttpResponse('Successfully logged out')
+
+class PostOfUserView(APIView):
+    def get(self,request,**kwargs):
+        pk = kwargs.get('pk')
+        user = User.objects.get(pk=pk)
+        post = Post.objects.filter(user=user)
+        serializer = PostSerializer(post,many=True)
+        return Response(serializer.data)

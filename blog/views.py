@@ -2,12 +2,15 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView,CreateAPIView,GenericAPIView \
 					,RetrieveUpdateDestroyAPIView,RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.decorators import api_view
 from rest_framework import status
 from datetime import datetime
 from django.http import Http404
-from blog.serializers import PostSerializer,PostDetailSerializer,CommentSerializer,TagSerializer
+from blog.serializers import PostSerializer,PostDetailSerializer,CommentSerializer, \
+					TagSerializer
 from blog.models import Post,Comment,Tag
+from blog.permissions import IsOwnerOrReadOnly
 
 @api_view(['GET'])
 def index(request):
@@ -25,6 +28,7 @@ class TagView(ListAPIView):
 class CommentView(CreateAPIView):
 	queryset = Post.objects.all()
 	serializer_class = CommentSerializer
+	permission_classes = (IsAuthenticatedOrReadOnly,)
 
 	def create(self,request,*args,**kwargs):
 		comment = request.data.get('content',None)
@@ -59,6 +63,7 @@ class PostDetailView(RetrieveAPIView):
 class PostCreateView(CreateAPIView):
 	queryset = Post.objects.all()
 	serializer_class = PostSerializer
+	permission_classes = (IsAuthenticatedOrReadOnly,)
 
 	def create(self,request,*args,**kwargs):
 		tag_data = request.data.get('tags',None)
@@ -74,6 +79,7 @@ class PostCreateView(CreateAPIView):
 class PostUpdateDeleteView(RetrieveUpdateDestroyAPIView):
 	queryset = Post.objects.all()
 	serializer_class = PostSerializer
+	permission_classes = (IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly)
 	lookup_field = 'pk'
 
 	def update(self,request,*args,**kwargs):

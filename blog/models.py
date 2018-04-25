@@ -1,10 +1,9 @@
-from django.db.models import Model,CharField,TextField,IntegerField,ForeignKey,\
+from django.db.models import Model,CharField,TextField,PositiveIntegerField,ForeignKey,\
 							 CASCADE,ManyToManyField,DateTimeField
-from datetime import datetime
+from accounts.models import User
 
 class Tag(Model):
 	tag = CharField(max_length=100)
-	description = TextField(blank=True)
 
 	def __str__(self):
 		return self.tag
@@ -12,19 +11,21 @@ class Tag(Model):
 class Post(Model):
 	title = CharField(max_length=200)
 	content = TextField()
-	votes = IntegerField(default=0)
+	votes = PositiveIntegerField(default=0)
 	created_on = DateTimeField(auto_now_add=True)
 	last_edited = DateTimeField(null=True,blank=True)
-	tags = ManyToManyField(Tag,related_name='tags')
+	tags = ManyToManyField(Tag,related_name='tags',blank=True)
+	user = ForeignKey(User,related_name='author',on_delete=CASCADE)
 
 	def __str__(self):
 		return self.title
 
 class Comment(Model):
 	content = TextField()
-	likes = IntegerField(default=0)
+	likes = PositiveIntegerField(default=0)
 	created_on = DateTimeField(auto_now_add=True)
-	post = ForeignKey(Post,on_delete=CASCADE,related_name='comments')
+	post = ForeignKey(Post,related_name='comments',on_delete=CASCADE)
+	user = ForeignKey(User,related_name='comment_by',on_delete=CASCADE)
 
 	def __str__(self):
 		return self.content
