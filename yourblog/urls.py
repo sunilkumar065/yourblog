@@ -21,6 +21,7 @@ from accounts.views import RegistrationView,LoginView,logout_view,PostOfUserView
 urlpatterns = [
     url('^$',index),
     url('admin/', admin.site.urls),
+    url(r'^api-auth/', include('rest_framework.urls')),
     url('blog/',include('blog.urls')),
     url('register',RegistrationView.as_view(),name='register'),
     url('login',LoginView.as_view(),name='login'),
